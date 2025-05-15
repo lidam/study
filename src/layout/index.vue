@@ -1,55 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
-import { Location } from '@element-plus/icons-vue'
+import { Location, HomeFilled } from '@element-plus/icons-vue'
+import  MenuList from './menu'
 
 const router = useRouter()
 
-const menuList = ref([
-  {
-    id: "1",
-    label: 'webworker',
-    icon: 'Location',
-    path: '/',
-    children: [
-      {
-        id: "1-1",
-        label: '笔记',
-        path: '/'
-      },
-      {
-        id: "1-2",
-        label: '基本功能',
-        path: '/about'
-      },
-      {
-        id: "1-3",
-        label: '图片处理',
-        path: '/testPic'
-      },
-      {
-        id: "1-4",
-        label: '表格',
-        path: '/workbook'
-      }
-    ]
-  },
-  {
-    id: "2",
-    label: "GSAP",
-    icon: "Location",
-    path: '/gsap',
-    children: [
-      {
-        id: "2-1",
-        label: 'GSAP',
-        path: '/gsap'
-      }
-    ]
-  }
-])
+const menuList = ref(MenuList)
 
-const defaultOpens = ref(["1", "1-1"])
+const defaultOpens = ref(["0"])
 // 菜单点击事件
 const onHandleClick = (item: any) => {
   router.push(item.path);
@@ -69,26 +28,30 @@ function handleClose(key: string, keyPath: string[]) {
     <div class="title-container">
       <span class="text">STUDY</span>
     </div>
-    <el-menu default-active="1-1" :default-openeds="defaultOpens" class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose">
-      <el-sub-menu v-for="(item, index) in menuList" :key="index" :index="item.id">
-        <template #title>
-          <el-icon>
-            <location />
-          </el-icon>
-          <span>{{ item.label }}</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item v-for="(child, index) in item.children" :index="child.id" :key="child.id"
-            @click="onHandleClick(child)">
-            {{ child.label }}
+    <div class="menu-container">
+      <el-menu default-active="0" :default-openeds="defaultOpens" class="el-menu-vertical-demo"
+        @open="handleOpen"
+        @close="handleClose">
+        <template v-for="(item, index) in menuList">
+          <el-menu-item v-if="!item.children" :index="item.id" @click="onHandleClick(item)">
+            <component :is="item.icon" style="width: 16px;height: 16px;"></component>
+            <span v-if="item.label">{{ item.label }}</span>
           </el-menu-item>
-        </el-menu-item-group>
-      </el-sub-menu>
-    </el-menu>
-    <nav>
-    </nav>
+          <el-sub-menu v-else :key="index" :index="item.id">
+            <template #title>
+              <component :is="item.icon" style="width: 16px;height: 16px;"></component>
+              <span>{{ item.label }}</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item v-for="(child, index) in item.children" :index="child.id" :key="child.id"
+                @click="onHandleClick(child)">
+                {{ child.label }}
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-sub-menu>
+        </template>
+      </el-menu>
+    </div>
   </div>
   <div class="wrapper">
     <RouterView />
@@ -109,6 +72,11 @@ function handleClose(key: string, keyPath: string[]) {
       -webkit-background-clip: text !important;
       -webkit-text-fill-color: transparent;
     }
+  }
+  .menu-container{
+    width: 100%;
+    height: calc(100vh - 48px);
+    overflow-y: auto;
   }
 }
 
