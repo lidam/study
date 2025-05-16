@@ -32,6 +32,11 @@ const router = createRouter({
       path: '/gsap',
       name: 'gsap',
       component: () => import('../views/gsap/index.vue')
+    },
+    {
+      path: '/algorithm',
+      name: 'algorithm',
+      component: () => import('../views/algorithm/index.vue')
     }
   ],
 })

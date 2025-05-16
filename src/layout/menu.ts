@@ -43,6 +43,18 @@ const MenuList = [
         path: '/gsap'
       }
     ]
+  },
+  {
+    id: "3",
+    label: "算法",
+    icon: "Location",
+    children: [
+      {
+        id: "3-1",
+        label: '算法1',
+        path: '/algorithm'
+      }
+    ]
   }
 ]
 
